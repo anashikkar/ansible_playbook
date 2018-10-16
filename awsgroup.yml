@@ -1,0 +1,38 @@
+--- #EC2 Group Module example
+- hosts: aws
+  connection: local
+  remote_user: test
+  become: yes
+  gather_facts: no
+  vars_files:
+  - files/cred.yml
+  tasks: 
+  - name: Basic security group creaiton
+    ec2_group: 
+      aws_access_key: "{{ aws_key }}"
+      aws_secret_key: "{{ aws_id }}"
+      region: "{{ aws_region }}" 
+      name: MyTestGroup
+      description: This is ec2 group by ansible demo
+      vpc_id: vpc-778cd71f
+      rules: 
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: udp
+          from_port: 100
+          to_port: 100
+          cidr_ip: 0.0.0.0/0 
+      rules_egress:
+        - proto: tcp
+          from_port: 90
+          to_port: 90
+          cidr_ip: 0.0.0.0/0
+    register: result
+  - name: Display the group id
+    debug: var=result.group_id
+  - name: Display the IP permissions
+    debug: var=result.ip_permissions 
+
+     

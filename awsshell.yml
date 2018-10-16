@@ -1,0 +1,12 @@
+--- # AWS EC2 Instance Communication example
+- hosts: aws
+  remote_user: ansible
+  become_method: sudo
+  gather_facts: yes
+  connection: ssh
+  tasks:
+  - name: Execute a shell command for directory listing
+    shell: ls -al ~
+    register: result
+  - name: Display the result as JSON
+    debug: var=result

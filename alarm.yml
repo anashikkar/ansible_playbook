@@ -1,0 +1,26 @@
+--- # EC2 Metric Alarm
+- hosts: aws
+  connection: local
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  vars_files:
+  - files/cred.yml
+  tasks: 
+  - name: Create Basic CPU alarm
+    ec2_metric_alarm:
+      aws_access_key: "{{ aws_key }}"
+      aws_secret_key: "{{ aws_id }}"
+      region: "{{ aws_region }}"
+      state: present
+      name: OurFirstAlarmTest
+      metric: "CPUUtilization"
+      namespace: "AWS/EC2"
+      statistic: Average
+      comparison: ">="
+      threshold: 25.0
+      period: 300
+      evaluation_periods: 6
+      unit: "Percent"
+      description: "This alert is fired when CPU is greater than 25% for 30 mins"
+      dimensions: {'InstanceID':'i-04ccd28a72f1af6bf'}
