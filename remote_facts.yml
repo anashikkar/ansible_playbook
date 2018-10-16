@@ -1,0 +1,18 @@
+--- #EC2 Remote facts module example
+- hosts: aws
+  connection: local
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  vars_files: 
+  - ~/cred.yml
+  tasks: 
+  - name: Gather facts of all running ec2 instances
+    ec2_remote_facts: 
+       aws_access_key: "{{ aws_key }}"
+       aws_secret_key: "{{ aws_id }}"
+       region: "{{aws_region}}"
+    register: remote_facts
+  - debug: msg={{remote_facts.instances[0].id}}
+  - debug: var=remote_facts.instances[0].id
+
