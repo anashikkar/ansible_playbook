@@ -1,0 +1,40 @@
+--- # EC2 Example playbook to lanch instance
+- hosts: aws
+  connection: local
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  vars_files:
+  - ~/cred.yml
+  tasks:
+  - name: Basic provisioning of EC2 instance
+    ec2:
+      aws_access_key: "{{aws_key}}"
+      aws_secret_key: "{{aws_id}}"
+      region: "{{aws_region}}"
+      image: ami-0912f71e06545ad88
+      instance_type: t2.micro
+      count: 1
+      instance_tags: 
+       Name: 'del'
+    register: ec2
+
+#  - name: Gather facts of all running ec2 instances
+#    ec2_remote_facts: 
+#       aws_access_key: "{{ aws_key }}"
+#       aws_secret_key: "{{ aws_id }}"
+#       region: "{{aws_region}}"
+#       filters:
+#         instance-state-name: running
+#         "tag:Name": "del"
+#    register: remote_facts
+#  - debug: var=remote_facts.instances[0].id
+
+#  - name: Get instance ID of all instances
+#    command: aws ec2 describe-instances --region ap-south-1 --query "Reservations[*].Instances[*].InstanceId" --filters "Name=tag:Name,Values=del" --output text
+#    register: instance_ids
+#  - debug: var="{{item}}"
+#    with_items: instance_ids.stdout_lines
+
+
+ 

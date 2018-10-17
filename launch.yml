@@ -1,0 +1,28 @@
+--- # EC2 Example playbook to lanch instance
+- hosts: aws
+  connection: local
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  vars_files:
+  - ~/cred.yml
+  tasks:
+  - name: Launch instance
+    ec2:
+       image: ami-0912f71e06545ad88
+       instance_type: t2.micro
+       region: "{{aws_region}}"
+       instance_tags: 
+         Name: del
+       wait: true
+    register: ec2
+
+  - name: Terminate instances that were previously launched
+    ec2:
+      state: 'absent'
+      instance_ids: '{{ ec2.instance_ids }}'
+      region: "{{aws_region}}"
+ 
+  - name: Display instance ID
+    debug: var=ec2.instance_ids
+
