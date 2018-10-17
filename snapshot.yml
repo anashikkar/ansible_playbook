@@ -1,0 +1,22 @@
+--- # EC2 snapshot demo
+- hosts: aws
+  connection: local
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  vars_files:
+  - ~/cred.yml
+  tasks:
+  - name: Take snapshot of instance
+    ec2_snapshot:
+      aws_access_key: "{{aws_key}}"
+      aws_secret_key: "{{aws_id}}"
+      region: "{{aws_region}}"
+#      instance_id: i-04ccd28a72f1af6bf
+#      device_name: /dev/xvda
+#      description: Root volume snapshot taken from ansible
+      snapshot_id: snap-09cf7ada108d4d94d
+      state: absent
+      wait: no
+    register: result
+  

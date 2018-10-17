@@ -14,5 +14,5 @@
        region: "{{aws_region}}"
     register: remote_facts
   - debug: msg={{remote_facts.instances[0].id}}
-  - debug: var=remote_facts.instances[0].id
+  - debug: var=remote_facts
 

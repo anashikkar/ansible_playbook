@@ -1,0 +1,30 @@
+--- # EC2 Example playbook to lanch instance
+- hosts: aws
+  connection: local
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  vars_files:
+  - ~/cred.yml
+  tasks:
+  - name: Gather facts of all running ec2 instances
+    ec2_remote_facts: 
+       aws_access_key: "{{ aws_key }}"
+       aws_secret_key: "{{ aws_id }}"
+       region: "{{aws_region}}"
+       filters:
+         "tag:Name": "del"
+    register: remote_facts
+  - debug: msg={{remote_facts.instances[0].id}}
+ 
+  - name: Stop instance with tag del
+    ec2:
+      instance_id: "{{remote_facts.instances[0].id}}"
+      region: "{{aws_region}}"
+      instance_tags: 
+       Name: 'del'
+      state: absent
+    register: result
+  - name: Display instance ID
+    debug: var=result
+
