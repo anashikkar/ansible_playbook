@@ -13,6 +13,10 @@
        aws_secret_key: "{{ aws_id }}"
        region: "{{aws_region}}"
     register: remote_facts
-  - debug: msg={{remote_facts.instances[0].id}}
-  - debug: var=remote_facts
-
+#  - debug: msg={{remote_facts.instances[0].id}}
+#  - debug: var=remote_facts
+  - name: Get instance ID of all instances
+    command: aws ec2 describe-instances --region ap-south-1 --query "Reservations[*].Instances[*].InstanceId" --output text
+    register: instance_ids
+  - debug: var="{{item}}"
+    with_items: instance_ids.stdout_lines
